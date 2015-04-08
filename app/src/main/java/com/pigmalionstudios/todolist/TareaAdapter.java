@@ -44,29 +44,21 @@ public class TareaAdapter extends ArrayAdapter<Tarea> {
 
      @Override
      public View getView(int position, View convertView, ViewGroup parent) {
-         // En primer lugar "inflamos" una nueva vista, que será la que se
-         // mostrará en la celda del ListView. Para ello primero creamos el
-         // inflater, y después inflamos la vista.
+
          LayoutInflater inflater = LayoutInflater.from(context);
          View item = inflater.inflate(R.layout.listitem_tarea, null);
 
-         // A partir de la vista, recogeremos los controles que contiene para
-         // poder manipularlos.
-         // Recogemos el ImageView y le asignamos una foto.
          ImageView imagen = (ImageView) item.findViewById(R.id.imgAlarm);
-         if(((Tarea)datos.get(position)).hasAlarm()){
-             //noDibujarAlarmita();
-             //imagen.setImageResource(0);
-             imagen.setImageResource(R.drawable.ic_action_alarms);
-         } else {
-             imagen.setImageResource(android.R.drawable.status_bar_item_app_background);
+         if (!datos.isEmpty()) {
+             if (!((Tarea) datos.get(position)).hasAlarm()) {
+                 imagen.setVisibility(View.GONE);
+             }
+             TextView txtNombre = (TextView) item.findViewById(R.id.txtTarea);
+             txtNombre.setText(((Tarea) datos.get(position)).getNombre());
+
+             // Devolvemos la vista para que se muestre en el ListView.
+
          }
-         //imagen.setImageResource(datos.get(position).getDrawableImageID());
-
-         TextView txtNombre = (TextView) item.findViewById(R.id.txtTarea);
-         txtNombre.setText(((Tarea)datos.get(position)).getNombre());
-
-         // Devolvemos la vista para que se muestre en el ListView.
          return item;
      }
 }

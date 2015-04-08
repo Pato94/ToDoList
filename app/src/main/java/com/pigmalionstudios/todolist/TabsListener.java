@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,7 +35,7 @@ public class TabsListener<T extends Fragment> implements ActionBar.TabListener {
     }
 
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        ft.replace(android.R.id.content, mFragment);
+        ft.replace(android.R.id.content, mFragment, (((ListaFragment)mFragment).tipo==ListaFragment.Tipo.PENDIENTES)?"Pendientes":"Hechas");
     }
 
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {

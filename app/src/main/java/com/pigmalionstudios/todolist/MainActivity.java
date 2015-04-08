@@ -1,20 +1,28 @@
 package com.pigmalionstudios.todolist;
 
 
+import android.app.Fragment;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends ActionBarActivity {
-
+    public static final int BORRAR = 5;
+    public static final int AGREGAR = 3;
+    public static final int COMPLETAR = 6;
+    public ArrayList tareasPendientes;
+    public ListaFragment fragmentoVivo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        tareasPendientes = new ArrayList<Tarea>();
         ActionBar actionBar = getSupportActionBar();
 //        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -28,12 +36,13 @@ public class MainActivity extends ActionBarActivity {
                  .setTabListener(new TabsListener<ListaFragment>(
                         this, this.getString(R.string.tag_pendientes), ListaFragment.class));
 
-        actionBar.addTab(tabPendientes);
+
 
         ActionBar.Tab tabHechas = actionBar.newTab()
                  .setText(R.string.tag_hechas)
                  .setTabListener(new TabsListener<ListaFragment>(
                 this, this.getString(R.string.tag_hechas), ListaFragment.class));
+        actionBar.addTab(tabPendientes);
         actionBar.addTab(tabHechas);
     }
 
@@ -51,12 +60,54 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id==R.id.action_add){
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            if (getSupportActionBar().getSelectedTab().getText().toString().equals(getString(R.string.tag_pendientes)))
+                    crearNuevaTarea("");
         }
+        //noinspection SimplifiableIfStatement
+
 
         return super.onOptionsItemSelected(item);
+    }
+    private void crearNuevaTarea(String nombre){
+        Intent intent = new Intent(this, DetalleActivity.class);
+        intent.putExtra("nombre", nombre);
+        intent.putExtra("razon", DetalleActivity.CREAR);
+        startActivityForResult(intent, 3);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {//Estaria bueno que le de uso al request code
+        if (RESULT_OK == resultCode)
+        {
+            ListaFragment fragmentPendientes = (ListaFragment)(getSupportFragmentManager().findFragmentByTag("Pendientes"));
+            ListaFragment  fragmentHechas = (ListaFragment)(getSupportFragmentManager().findFragmentByTag("Hechas"));
+
+            int razon = data.getIntExtra("razon", -1);
+            if (razon==BORRAR){
+
+                String nombre = data.getStringExtra("nombre");
+//                String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+                fragmentPendientes.borrarPorNombre(nombre);
+            }
+            if (razon==AGREGAR){
+                String nombre = data.getStringExtra("nombre");
+                boolean esAgregar = data.getStringExtra("esAgregar").equals("si");
+                //Tirar null null es OBVIAMENTE una burrada TODO
+                if(!fragmentPendientes.agregarALista(new Tarea(nombre, null, null), esAgregar)){
+                    crearNuevaTarea(nombre);//Para que llame a la instancia otra vez
+                };
+            }
+            if (razon==COMPLETAR){
+                String nombre = data.getStringExtra("nombre");
+                //Fue un intento fallido por hacer que funcione
+//                getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragmentHechas, "Hechas33");
+                //fragmentHechas.agregarALista(fragmentPendientes.borrarPorNombre(nombre), false);
+                Tarea tarea = fragmentPendientes.borrarPorNombre(nombre);
+                //fragmentHechas.agregarALista(tarea, true);
+                tareasPendientes.add(tarea);
+            }
+        }
     }
 }
