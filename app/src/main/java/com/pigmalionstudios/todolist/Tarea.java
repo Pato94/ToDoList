@@ -10,11 +10,21 @@ public class Tarea {
     String nombre;
     Date fechaAlarma;
     Date fechaVencimiento;
+    boolean hecha;
 
-    public Tarea(String nom, Date fechaAl, Date fechaVen){
+    public boolean isDone(){
+        return hecha;
+    }
+    public Tarea hacete(){
+        this.hecha = true;
+        return this;
+    }
+
+    public Tarea(String nom, Date fechaAl, Date fechaVen, boolean estaHecha){
         this.nombre = nom;
         this.fechaAlarma = fechaAl;
         this.fechaVencimiento = fechaVen;
+        this.hecha = estaHecha;
     }
 
     public boolean hasAlarm(){

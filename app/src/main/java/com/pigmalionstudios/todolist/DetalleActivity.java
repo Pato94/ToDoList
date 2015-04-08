@@ -18,7 +18,13 @@ public class DetalleActivity extends ActionBarActivity {
     public String nombre;
     public Menu menu;
     public EditText editTextNombre;
-
+    public String stringInicialNombre;
+    public boolean algoCambio(){
+        //La idea es comparar el estado actual de los views con su estado inicial
+        boolean resultado = true;
+        resultado = resultado && (editTextNombre.getText().toString().equals(stringInicialNombre));
+        return !resultado;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +35,7 @@ public class DetalleActivity extends ActionBarActivity {
 //        editTextNombre.setSelection(editTextNombre.getText().length());
         if (intent != null) {
             razonRecibida = intent.getIntExtra("razon", -1);
-            nombre = intent.getStringExtra("nombre");
+            stringInicialNombre = nombre = intent.getStringExtra("nombre");
             if (razonRecibida == MASTERCARD) {
 
                 setTitle("Tarea: " + nombre);
@@ -42,6 +48,7 @@ public class DetalleActivity extends ActionBarActivity {
                 //Aqui no deberia permitir mostrar Los items de la action bar TODO
             }
         }
+        //Aca deberia guardar todos los estados iniciales:
         editTextNombre.requestFocus();
     }
 
@@ -65,6 +72,9 @@ public class DetalleActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         int id = item.getItemId();
+        if(algoCambio() && id!=R.id.action_edit && razonRecibida == MASTERCARD){
+          Toast.makeText(getApplicationContext(), "Debe guardar los cambios antes de llevar a cabo esta accion", Toast.LENGTH_SHORT).show();
+        } else {
         switch (id) {
             case R.id.action_delete: {
                 Intent intent = new Intent(this, MainActivity.class);
@@ -96,7 +106,7 @@ public class DetalleActivity extends ActionBarActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
-        }
+        }}
         return super.onOptionsItemSelected(item);
     }
     private boolean isEmpty(EditText etText) {

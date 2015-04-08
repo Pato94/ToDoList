@@ -82,17 +82,17 @@ public class ListaFragment extends Fragment {
         Date time = new Date();
 
         if (this.tipo == Tipo.PENDIENTES){
-            listaElementos.add(new Tarea("Tarea 1", null, null));
-            listaElementos.add(new Tarea("Tarea 2", time, null));
-            listaElementos.add(new Tarea("Tarea 3", time, null));
-            listaElementos.add(new Tarea("Tarea 4", null, null));
-            listaElementos.add(new Tarea("Tarea 5", time, null));
+            listaElementos.add(new Tarea("Tarea 1", null, null, false));
+            listaElementos.add(new Tarea("Tarea 2", time, null, false));
+            listaElementos.add(new Tarea("Tarea 3", time, null, false));
+            listaElementos.add(new Tarea("Tarea 4", null, null, false));
+            listaElementos.add(new Tarea("Tarea 5", time, null, false));
         } else {
-            listaElementos.add(new Tarea("Tarea 6", null, null));
-            listaElementos.add(new Tarea("Tarea 7", null, null));
-            listaElementos.add(new Tarea("Tarea 8", null, null));
-            listaElementos.add(new Tarea("Tarea 9", null, null));
-            listaElementos.add(new Tarea("Tarea 10", null, null));
+            listaElementos.add(new Tarea("Tarea 6", null, null, true));
+            listaElementos.add(new Tarea("Tarea 7", null, null, true));
+            listaElementos.add(new Tarea("Tarea 8", null, null, true));
+            listaElementos.add(new Tarea("Tarea 9", null, null, true));
+            listaElementos.add(new Tarea("Tarea 10", null, null, true));
         }
         return listaElementos;
     }

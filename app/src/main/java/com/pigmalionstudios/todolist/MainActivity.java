@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
                 String nombre = data.getStringExtra("nombre");
                 boolean esAgregar = data.getStringExtra("esAgregar").equals("si");
                 //Tirar null null es OBVIAMENTE una burrada TODO
-                if(!fragmentPendientes.agregarALista(new Tarea(nombre, null, null), esAgregar)){
+                if(!fragmentPendientes.agregarALista(new Tarea(nombre, null, null, false), esAgregar)){
                     crearNuevaTarea(nombre);//Para que llame a la instancia otra vez
                 };
             }
@@ -106,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
                 //fragmentHechas.agregarALista(fragmentPendientes.borrarPorNombre(nombre), false);
                 Tarea tarea = fragmentPendientes.borrarPorNombre(nombre);
                 //fragmentHechas.agregarALista(tarea, true);
-                tareasPendientes.add(tarea);
+                tareasPendientes.add(tarea.hacete());
             }
         }
     }

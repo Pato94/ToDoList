@@ -50,7 +50,7 @@ public class TareaAdapter extends ArrayAdapter<Tarea> {
 
          ImageView imagen = (ImageView) item.findViewById(R.id.imgAlarm);
          if (!datos.isEmpty()) {
-             if (!((Tarea) datos.get(position)).hasAlarm()) {
+             if (!((Tarea) datos.get(position)).hasAlarm()||((Tarea)datos.get(position)).isDone()) {
                  imagen.setVisibility(View.GONE);
              }
              TextView txtNombre = (TextView) item.findViewById(R.id.txtTarea);
