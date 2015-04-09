@@ -6,9 +6,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 public class DetalleActivity extends ActionBarActivity {
@@ -19,6 +25,9 @@ public class DetalleActivity extends ActionBarActivity {
     public Menu menu;
     public EditText editTextNombre;
     public String stringInicialNombre;
+    public DatePicker datePickerVencimiento;
+    public DatePicker datePickerAlarma;
+
     public boolean algoCambio(){
         //La idea es comparar el estado actual de los views con su estado inicial
         boolean resultado = true;
@@ -31,8 +40,20 @@ public class DetalleActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main_activity2);
         Intent intent = getIntent();
         editTextNombre = (EditText) findViewById(R.id.editText);
+        datePickerVencimiento = (DatePicker) findViewById(R.id.datePickerVencimiento);
+        datePickerAlarma = (DatePicker) findViewById(R.id.datePickerRecordatorio);
+        datePickerAlarma.setMaxDate((new GregorianCalendar(datePickerVencimiento.getYear(), datePickerVencimiento.getMonth(), datePickerVencimiento.getDayOfMonth()).getTimeInMillis()));
+//        datePickerVencimiento.setMinDate(new Date().getTime()-1);
+        datePickerVencimiento.init(datePickerVencimiento.getYear(), datePickerVencimiento.getMonth(), datePickerVencimiento.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+             datePickerAlarma.setMaxDate((new GregorianCalendar(view.getYear(), view.getMonth()+1, view.getDayOfMonth()).getTimeInMillis()));
+            }
 
+        });
 //        editTextNombre.setSelection(editTextNombre.getText().length());
+        ;
+
         if (intent != null) {
             razonRecibida = intent.getIntExtra("razon", -1);
             stringInicialNombre = nombre = intent.getStringExtra("nombre");
@@ -78,24 +99,29 @@ public class DetalleActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_delete: {
                 Intent intent = new Intent(this, MainActivity.class);
+                Tarea tarea = new Tarea(nombre, null, null, false);
                 intent.putExtra("razon", MainActivity.BORRAR);
-                intent.putExtra("nombre", nombre);
+                intent.putExtra("tarea", tarea);
                 setResult(RESULT_OK, intent);
                 finish();
             }
             case R.id.action_edit: {
-                if (isEmpty(editTextNombre)) {
-                    Toast.makeText(getApplicationContext(), "Debe ingresar un nombre para la tarea", Toast.LENGTH_SHORT).show();
-                    //editTextNombre.setHighlightColor(Color.RED);
-                    //Si podes darle rojo al nombre joya.
-                } else {
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("razon", MainActivity.AGREGAR);
-                    intent.putExtra("esAgregar", (razonRecibida == CREAR) ? "si" : "no");//Paja aprender como pasar booleans TODO
-                    intent.putExtra("nombre", editTextNombre.getText().toString());
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+
+                    if (isEmpty(editTextNombre)) {
+                        Toast.makeText(getApplicationContext(), "Debe ingresar un nombre para la tarea", Toast.LENGTH_SHORT).show();
+                        //editTextNombre.setHighlightColor(Color.RED);
+                        //Si podes darle rojo al nombre joya.
+                    } else {
+
+                            Intent intent = new Intent(this, MainActivity.class);
+                            intent.putExtra("razon", MainActivity.AGREGAR);
+                            intent.putExtra("esAgregar", (razonRecibida == CREAR) ? "si" : "no");//Paja aprender como pasar booleans TODO
+                            intent.putExtra("nombre", editTextNombre.getText().toString());
+                            setResult(RESULT_OK, intent);
+                            finish();
+
+                    }
+
                 break;
             }
             case R.id.action_complete:{

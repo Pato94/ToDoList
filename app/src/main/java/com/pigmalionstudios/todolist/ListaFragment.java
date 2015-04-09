@@ -1,6 +1,5 @@
 package com.pigmalionstudios.todolist;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,7 +28,8 @@ public class ListaFragment extends Fragment {
     public static enum Tipo {PENDIENTES, HECHAS};
     public Tipo tipo;
     TareaAdapter adapter;
-    public ArrayList listaElementos = new ArrayList<Tarea>();;
+    public ArrayList listaElementos = new ArrayList<Tarea>();
+    public TareasDataSource datasource;
     //public ListView lista;
     @InjectView(R.id.listView) ListView lst;
     public void setCosas(Tipo tip){
@@ -49,24 +49,32 @@ public class ListaFragment extends Fragment {
 
         }
         else {
-            if(esAgregar)
-                    adapter.add(tarea);
+            if(esAgregar) {
+                //adapter.add(tarea);
+                adapter.add(datasource.createTarea(tarea.getNombre(), tipo == Tipo.HECHAS));
+
+            }
             else
                 return true; //En realidad deberia modificar la tarea TODO
             return true;
         }
     }
     public Tarea removerDeLista(Tarea tarea){
+        /*
+        adapter.remove(tarea);
+        return tarea;
+        */
+        datasource.deleteComment(tarea);
         adapter.remove(tarea);
         return tarea;
     }
     public Tarea encontrarPorNombre(String nombre){
-        for(Tarea tarea : (ArrayList<Tarea>)listaElementos){
+        for(Tarea tarea : (ArrayList<Tarea>)adapter.datos){
             if(tarea.getNombre().equals(nombre)) return tarea;
         }
         return null;
     }
-    public Tarea borrarPorNombre(String nombre){
+    public Tarea borrarPorNombre(String nombre){/*
         Tarea aux = encontrarPorNombre(nombre);
         if (aux !=null)
             return removerDeLista(encontrarPorNombre(nombre));
@@ -75,7 +83,11 @@ public class ListaFragment extends Fragment {
             Toast.makeText(getView().getContext(), "Me llamaron"
                     + nombre, Toast.LENGTH_SHORT).show();
         }
-        return null;
+        return null;*/
+        Tarea tarea = encontrarPorNombre(nombre);
+        datasource.deleteComment(tarea);
+        adapter.remove(tarea);
+        return tarea;
     }
     //Ya veremos mas adelante (?
     public ArrayList obtenerDatosHardcodeados(){
@@ -101,11 +113,18 @@ public class ListaFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.lista_fragment, container, false);
         ButterKnife.inject(this, view);
+        /*
         if(adapter==null) {
             adapter = new TareaAdapter(view.getContext(), obtenerDatosHardcodeados());
-        }
+        }*/
+        datasource = ((MainActivity)getActivity()).datasource;
+        adapter = new TareaAdapter(view.getContext(), datasource.getAllTareas(tipo == Tipo.HECHAS));
+
         MainActivity principal = (MainActivity)getActivity();
         if(tipo==Tipo.HECHAS) {
+            for(Tarea tarea: (ArrayList<Tarea>)principal.tareasPendientes){
+                datasource.createTarea(tarea.getNombre(), true);
+            }
             adapter.addAll(principal.tareasPendientes);
             principal.tareasPendientes.clear();
         }

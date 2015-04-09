@@ -16,12 +16,17 @@ public class MainActivity extends ActionBarActivity {
     public static final int BORRAR = 5;
     public static final int AGREGAR = 3;
     public static final int COMPLETAR = 6;
+    public TareasDataSource datasource;
     public ArrayList tareasPendientes;
     public ListaFragment fragmentoVivo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        datasource= new TareasDataSource(this);
+        datasource.open();
+
         tareasPendientes = new ArrayList<Tarea>();
         ActionBar actionBar = getSupportActionBar();
 //        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -87,9 +92,10 @@ public class MainActivity extends ActionBarActivity {
             int razon = data.getIntExtra("razon", -1);
             if (razon==BORRAR){
 
-                String nombre = data.getStringExtra("nombre");
+                //String nombre = data.getStringExtra("nombre");
+                Tarea tarea = data.getParcelableExtra("tarea");
 //                String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
-                fragmentPendientes.borrarPorNombre(nombre);
+                fragmentPendientes.borrarPorNombre(tarea.getNombre());
             }
             if (razon==AGREGAR){
                 String nombre = data.getStringExtra("nombre");
@@ -105,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
 //                getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragmentHechas, "Hechas33");
                 //fragmentHechas.agregarALista(fragmentPendientes.borrarPorNombre(nombre), false);
                 Tarea tarea = fragmentPendientes.borrarPorNombre(nombre);
-                //fragmentHechas.agregarALista(tarea, true);
+//                fragmentHechas.agregarALista(tarea, true);
                 tareasPendientes.add(tarea.hacete());
             }
         }

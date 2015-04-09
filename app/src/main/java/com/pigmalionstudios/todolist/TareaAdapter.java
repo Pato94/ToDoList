@@ -20,7 +20,7 @@ import java.util.List;
 public class TareaAdapter extends ArrayAdapter<Tarea> {
 //     List<Tarea> tareas;
      private Context context;
-     private ArrayList datos;
+     public ArrayList datos;
      public TareaAdapter(Context context, ArrayList datos) {
          super(context, R.layout.listitem_tarea, datos);
          // Guardamos los parámetros en variables de clase.
