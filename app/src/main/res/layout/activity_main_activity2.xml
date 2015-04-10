@@ -51,7 +51,6 @@
         android:layout_height="wrap_content"
         android:datePickerMode="spinner"
         android:calendarViewShown="false"
-        android:minDate="04/09/2015"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:id="@+id/datePickerVencimiento"/>
@@ -76,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:datePickerMode="spinner"
-        android:minDate="04/09/2015"
+
         android:calendarViewShown="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

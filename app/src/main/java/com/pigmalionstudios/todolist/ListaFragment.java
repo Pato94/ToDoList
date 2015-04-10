@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -51,7 +50,9 @@ public class ListaFragment extends Fragment {
         else {
             if(esAgregar) {
                 //adapter.add(tarea);
-                adapter.add(datasource.createTarea(tarea.getNombre(), tipo == Tipo.HECHAS));
+                tarea.getFechaAlarm().mostrarFecha();
+                tarea.getFechaVenc().mostrarFecha();
+                adapter.add(datasource.createTarea(tarea.getNombre(), tarea.getFechaAlarm(), tarea.getFechaVenc(), tipo == Tipo.HECHAS));
 
             }
             else
@@ -89,25 +90,6 @@ public class ListaFragment extends Fragment {
         adapter.remove(tarea);
         return tarea;
     }
-    //Ya veremos mas adelante (?
-    public ArrayList obtenerDatosHardcodeados(){
-        Date time = new Date();
-
-        if (this.tipo == Tipo.PENDIENTES){
-            listaElementos.add(new Tarea("Tarea 1", null, null, false));
-            listaElementos.add(new Tarea("Tarea 2", time, null, false));
-            listaElementos.add(new Tarea("Tarea 3", time, null, false));
-            listaElementos.add(new Tarea("Tarea 4", null, null, false));
-            listaElementos.add(new Tarea("Tarea 5", time, null, false));
-        } else {
-            listaElementos.add(new Tarea("Tarea 6", null, null, true));
-            listaElementos.add(new Tarea("Tarea 7", null, null, true));
-            listaElementos.add(new Tarea("Tarea 8", null, null, true));
-            listaElementos.add(new Tarea("Tarea 9", null, null, true));
-            listaElementos.add(new Tarea("Tarea 10", null, null, true));
-        }
-        return listaElementos;
-    }
 
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState){
@@ -123,7 +105,7 @@ public class ListaFragment extends Fragment {
         MainActivity principal = (MainActivity)getActivity();
         if(tipo==Tipo.HECHAS) {
             for(Tarea tarea: (ArrayList<Tarea>)principal.tareasPendientes){
-                datasource.createTarea(tarea.getNombre(), true);
+                datasource.createTarea(tarea.getNombre(), tarea.getFechaAlarm(), tarea.getFechaVenc(), true);
             }
             adapter.addAll(principal.tareasPendientes);
             principal.tareasPendientes.clear();
@@ -138,10 +120,9 @@ public class ListaFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), DetalleActivity.class);
                 intent.putExtra("nombre", ((TextView) v.findViewById(R.id.txtTarea)).getText().toString());
                     intent.putExtra("razon", DetalleActivity.MASTERCARD);
-//                intent.putExtra("fechaAlarm", ((Tarea)lst.getItemAtPosition(posicion)).getFechaAlarm());
-//                intent.putExtra("fechaVenc", ((Tarea)lst.getItemAtPosition(posicion)).getFechaVenc());
+                    intent.putExtra("fechaAlarma", ((Tarea)adapter.getItem(posicion)).getFechaAlarm());
+                    intent.putExtra("fechaLimite", ((Tarea)adapter.getItem(posicion)).getFechaVenc());
                     getActivity().startActivityForResult(intent, MainActivity.BORRAR);
-
                 }
             });
         }

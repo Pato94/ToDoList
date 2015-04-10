@@ -2,18 +2,9 @@ package com.pigmalionstudios.todolist;
 
 
 import android.app.Activity;
-import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-
-import butterknife.ButterKnife;
 
 /**
  * Created by pigmalionstudios on 4/6/15.

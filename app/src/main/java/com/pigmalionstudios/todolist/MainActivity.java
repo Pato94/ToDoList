@@ -1,10 +1,9 @@
 package com.pigmalionstudios.todolist;
 
 
-import android.app.Fragment;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +18,10 @@ public class MainActivity extends ActionBarActivity {
     public TareasDataSource datasource;
     public ArrayList tareasPendientes;
     public ListaFragment fragmentoVivo;
+    GoogleApiClient googleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -100,8 +101,12 @@ public class MainActivity extends ActionBarActivity {
             if (razon==AGREGAR){
                 String nombre = data.getStringExtra("nombre");
                 boolean esAgregar = data.getStringExtra("esAgregar").equals("si");
+                Fecha fechaAlarma = data.getParcelableExtra("fechaAlarma");
+                Fecha fechaLimite = data.getParcelableExtra("fechaLimite");
+                fechaAlarma.mostrarFecha();
+                fechaLimite.mostrarFecha();
                 //Tirar null null es OBVIAMENTE una burrada TODO
-                if(!fragmentPendientes.agregarALista(new Tarea(nombre, null, null, false), esAgregar)){
+                if(!fragmentPendientes.agregarALista(new Tarea(nombre, fechaAlarma, fechaLimite, false), esAgregar)){
                     crearNuevaTarea(nombre);//Para que llame a la instancia otra vez
                 };
             }

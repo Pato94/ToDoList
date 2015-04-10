@@ -1,20 +1,14 @@
 package com.pigmalionstudios.todolist;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 
 public class DetalleActivity extends ActionBarActivity {
@@ -42,15 +36,8 @@ public class DetalleActivity extends ActionBarActivity {
         editTextNombre = (EditText) findViewById(R.id.editText);
         datePickerVencimiento = (DatePicker) findViewById(R.id.datePickerVencimiento);
         datePickerAlarma = (DatePicker) findViewById(R.id.datePickerRecordatorio);
-        datePickerAlarma.setMaxDate((new GregorianCalendar(datePickerVencimiento.getYear(), datePickerVencimiento.getMonth(), datePickerVencimiento.getDayOfMonth()).getTimeInMillis()));
+        TextView tv2 = (TextView) findViewById(R.id.textView2);
 //        datePickerVencimiento.setMinDate(new Date().getTime()-1);
-        datePickerVencimiento.init(datePickerVencimiento.getYear(), datePickerVencimiento.getMonth(), datePickerVencimiento.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-             datePickerAlarma.setMaxDate((new GregorianCalendar(view.getYear(), view.getMonth()+1, view.getDayOfMonth()).getTimeInMillis()));
-            }
-
-        });
 //        editTextNombre.setSelection(editTextNombre.getText().length());
         ;
 
@@ -60,6 +47,18 @@ public class DetalleActivity extends ActionBarActivity {
             if (razonRecibida == MASTERCARD) {
 
                 setTitle("Tarea: " + nombre);
+
+                Fecha fechaVenc = intent.getParcelableExtra("fechaLimite");
+                Fecha fechaAlarm = intent.getParcelableExtra("fechaAlarma");
+                datePickerAlarma.init(fechaAlarm.getAño(), fechaAlarm.getMes(), fechaAlarm.getDia(), null);
+                datePickerVencimiento.init(fechaVenc.getAño(), fechaVenc.getMes(), fechaVenc.getDia(), null);
+/*
+                if (parcel != null){
+                    Fecha[] result = Arrays.copyOf(parcel, parcel.length, Fecha[].class);
+                    tv2.setText(Integer.toString(result[0].getDia()));
+                       // datePickerAlarma.init(result[0].getAño(), result[0].getMes(), result[0].getDia(), null);
+
+                }*/
                 //En realidad aqui además obtendrias los otros datos. TODO
                 TextView tv1 = (TextView) findViewById(R.id.textView);
                 editTextNombre.setText(nombre);
@@ -114,6 +113,9 @@ public class DetalleActivity extends ActionBarActivity {
                     } else {
 
                             Intent intent = new Intent(this, MainActivity.class);
+                            intent.putExtra("fechaLimite", new Fecha(datePickerVencimiento.getDayOfMonth(), datePickerVencimiento.getMonth(), datePickerVencimiento.getYear()));
+                            intent.putExtra("fechaAlarma", new Fecha(datePickerAlarma.getDayOfMonth(), datePickerAlarma.getMonth(), datePickerAlarma.getYear()));
+
                             intent.putExtra("razon", MainActivity.AGREGAR);
                             intent.putExtra("esAgregar", (razonRecibida == CREAR) ? "si" : "no");//Paja aprender como pasar booleans TODO
                             intent.putExtra("nombre", editTextNombre.getText().toString());

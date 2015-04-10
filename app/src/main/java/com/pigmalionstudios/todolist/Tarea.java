@@ -3,16 +3,14 @@ package com.pigmalionstudios.todolist;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 /**
  * Created by pigmalionstudios on 4/6/15.
  */
 public class Tarea implements Parcelable{
 
     String nombre;
-    Date fechaAlarma;
-    Date fechaVencimiento;
+    Fecha fechaAlarma;
+    Fecha fechaVencimiento;
     boolean hecha;
     long id;
 
@@ -28,17 +26,30 @@ public class Tarea implements Parcelable{
     public boolean isDone(){
         return hecha;
     }
+
     public Tarea hacete(){
         this.hecha = true;
         return this;
     }
-
+    public void setAlarma(int dia, int mes, int año){
+        fechaAlarma.setDia(dia);
+        fechaAlarma.setMes(mes);
+        fechaAlarma.setAño(año);
+    }
+    public void setLimite(int dia, int mes, int año){
+        fechaAlarma.setDia(dia);
+        fechaAlarma.setMes(mes);
+        fechaAlarma.setAño(año);
+    }
     public int describeContents(){
         return 0;
     }
 
     public void writeToParcel(Parcel dest, int flags){
-        dest.writeString(nombre);/*
+        dest.writeString(nombre);
+        dest.writeLong(id);
+        dest.writeTypedArray(new Fecha[]{fechaAlarma, fechaVencimiento}, flags);
+        /*
         dest.writeLongArray(new long[]{fechaAlarma.getTime(), fechaVencimiento.getTime(), id});*/
     }
     public Tarea(Parcel parcel){
@@ -55,7 +66,13 @@ public class Tarea implements Parcelable{
         }
     };
     public void readFromParcel(Parcel parcel){
-        nombre = parcel.readString();/*
+        nombre = parcel.readString();
+        id = parcel.readLong();
+        Fecha[] aux = new Fecha[2];
+        parcel.readTypedArray(aux, Fecha.CREATOR);
+        fechaAlarma = aux[0];
+        fechaVencimiento = aux[1];
+        /*
         long[] temp = new long[3];
         parcel.readLongArray(temp);
         fechaAlarma = new Date(temp[0]);
@@ -63,7 +80,7 @@ public class Tarea implements Parcelable{
         id = temp[2];*/
     }
 
-    public Tarea(String nom, Date fechaAl, Date fechaVen, boolean estaHecha){
+    public Tarea(String nom, Fecha fechaAl, Fecha fechaVen, boolean estaHecha){
         this.nombre = nom;
         this.fechaAlarma = fechaAl;
         this.fechaVencimiento = fechaVen;
@@ -73,10 +90,10 @@ public class Tarea implements Parcelable{
     public boolean hasAlarm(){
         return (fechaAlarma!=null);
     }
-    public Date getFechaAlarm(){
+    public Fecha getFechaAlarm(){
         return fechaAlarma;
     }
-    public Date getFechaVenc(){
+    public Fecha getFechaVenc(){
         return fechaVencimiento;
     }
     public String getNombre(){return nombre;}
